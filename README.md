@@ -3,7 +3,7 @@ The Python project is designed to provide an automated workflow for
 simulating and analyzing various catalysis reactions,
 including OER/ORR (Oxygen Evolution/Reduction Reaction),
 HER (Hydrogen Evolution Reaction),
-and HzOR (Horizon Zero Dawn of Reaction).  
+and HzOR (Hydrazine hydrate oxidation Reaction).  
 The project enables users to build computational models,
 run simulations, and generate step figures for visualizing the reaction mechanisms.
 
