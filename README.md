@@ -36,7 +36,7 @@ The VASP software is typically executed on a supercomputer, and a commonly used 
 #SBATCH -N 2 -n 80
 module load vasp/5.4.4
 MPIRUN=mpirun #Intel mpi and Open MPI
-python DIR/main.py --reaction hzor --path xxx/xxx --site 4 --angle 0 --runornot True --fixslab False
+python DIR/main.py --reaction hzor --path xxx/xxx --site 4 --angle 0 --runornot 1 --fixslab 0
 ```
 **Replace The `DIR/main.py` in this bash script as your real way to the project like `~/python_code/Catakit/main.py`**
 
@@ -109,7 +109,7 @@ echo This job has allocated $SLURM_JOB_CPUS_PER_NODE cpu cores.
 MPIRUN=mpirun #Intel mpi and Open MPI
 echo "Starting Time is `date`" >display
 echo "Directory is `pwd`" >display
-python ~/python_code/electrochemistry/main.py --reaction hzor --path /home/scms/xxx/xxx/FeNiRu --site 45 --angle 0 --runornot True --fixslab False
+python ~/python_code/electrochemistry/main.py --reaction hzor --path /home/scms/xxx/xxx/FeNiRu --site 45 --angle 0 --runornot 1 --fixslab 0
 echo "Ending Time is `date`" >display
 ```
 The file tree is like:
