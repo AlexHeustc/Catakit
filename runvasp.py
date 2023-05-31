@@ -56,7 +56,7 @@ class RunVasp:
                 os.chdir(opt_path)
                 relax = MPRelaxSet(structure=Structure.from_file('POSCAR'), user_incar_settings=custom_settings)
                 relax.write_input('.')
-                os.system("mpirun vasp_std >>display")
+                subprocess.run(["mpirun", "vasp_std"], stdout=subprocess.PIPE)
                 os.chdir(self.path)
 
     def calculate_frequency(self):
@@ -77,7 +77,7 @@ class RunVasp:
                 continue
             else:
                 os.chdir(freq_path)
-                os.system("cp ../opt/CONTCAR POSCAR")
+                shutil.copyfile("../opt/CONTCAR", "POSCAR")
                 atoms = read("POSCAR")
                 c = FixAtoms(indices=self.freq_index[f"{dir.split('/')[-1]}"])
                 atoms.set_constraint(constraint=c)
@@ -85,6 +85,6 @@ class RunVasp:
                 zep = MPStaticSet(structure=AseAtomsAdaptor.get_structure(atoms),
                                   user_incar_settings=custom_settings)
                 zep.write_input('.')
-                os.system("mpirun vasp_std >>display")
+                subprocess.run(["mpirun", "vasp_std"], stdout=subprocess.PIPE)
 
                 os.chdir(self.path)

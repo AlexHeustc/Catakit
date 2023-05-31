@@ -34,23 +34,30 @@ class GetSite:
 
 
 class Reaction:
-    def __init__(self, path, surf, ads_points, angle=0, height=1.7, opt_fix_height=0):
+    def __init__(self, path, surf, ads_points, angle, height=1.7, fixslab=1):
         self.surf = surf
         self.ads_points = ads_points
-        self.opt_fix_height = opt_fix_height
         self.height = np.array([0, 0, height])
         self.angle = angle
+        self.fixslab = fixslab
         self.dir = []
 
     def build_model(self, adsorbates: dict):
         for label, positions in adsorbates.items():
             adsorbent = Atoms(label, positions + self.ads_points + self.height)
-            adsorbent.rotate(self.angle, 'z', center=(0, 0, 0))
-
+            # if isinstance(self.angle,int):
+            adsorbent.rotate(self.angle, 'z', center=self.ads_points)
+            # elif isinstance(self.angle,list) or isinstance(self.angle,tuple):
+            # adsorbent.rotate(self.angle, center=self.ads_points)
+            # adsorbent.rotate(self.angle[1], 'y', center=self.ads_points)
+            # adsorbent.rotate(self.angle[2], 'z', center=self.ads_points)
+            # 是否固定slab
+            if self.fixslab != 0:
+                self.surf.set_constraint(FixAtoms(indices=[atom.index for atom in self.surf]))
             atoms = self.surf + adsorbent
-            atoms.set_constraint(
-                FixAtoms(indices=[atom.index for atom in atoms if atom.position[2] < self.opt_fix_height]))
+
             atoms = sort(atoms)
+            # 计算振动频率时固定
             freq_fix_indices = [atom.index for atom in atoms if atom.position.tolist() in self.surf.positions.tolist()]
             freq_fix[label] = freq_fix_indices
 
@@ -88,12 +95,12 @@ class Reaction:
                'N2H2': np.array([[0, 0, 0],
                                  [1.294395026, -0.005279826, 0.7034826],
                                  [-0.56252879, -0.725273111, 0.455652522],
-                                 [1.831841066, 0.734513861, 0.234505592],]),
+                                 [1.831841066, 0.734513861, 0.234505592], ]),
                'N2H': np.array([[0, 0, 0],
                                 [1.294395026, -0.005279826, 0.7034826],
-                                [1.831841066, 0.734513861, 0.234505592],]),
+                                [1.831841066, 0.734513861, 0.234505592], ]),
                'N2': np.array([[0, 0, 0],
-                                [1.294395026, -0.005279826, 0.7034826],])}
+                               [1.294395026, -0.005279826, 0.7034826], ])}
 
         self.build_model(ads)
         self.dir = ads.keys()

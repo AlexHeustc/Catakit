@@ -2,22 +2,30 @@
 
 import os
 import argparse
+import ast
+import build_model
 
 from ase.io import read
-import build_model
 import runvasp
+import numpy as np
 from build_model import Reaction
 
 
 def execute_reaction(args):
-    path, site, angle, height, reaction_num, runornot = args
+    path, site, angle, height, reaction_num, runornot, fixslab = args
     os.chdir(path)
-    slab = read(os.path.join(path, 'slab/opt/CONTCAR'))
-    reaction = build_model.Reaction(path=path,
-                                    surf=slab,
-                                    ads_points=slab[site].position,
-                                    angle=angle,
-                                    height=height)
+    slab = read(os.path.join(path, 'slab', 'opt', 'CONTCAR'))
+    if isinstance(site, int):
+        ads_points = slab[site].position
+    elif isinstance(site, list):
+        ads_points = np.array(site)
+
+    reaction = Reaction(path=path,
+                        surf=slab,
+                        ads_points=ads_points,
+                        angle=angle,
+                        height=height,
+                        fixslab=fixslab)
 
     reaction_dict = {
         "oer": reaction.oer,
@@ -41,7 +49,9 @@ if __name__ == '__main__':
     parser.add_argument('--site', type=int, default=0)
     parser.add_argument('--angle', type=int, default=0)
     parser.add_argument('--height', type=float, default=1.7)
-    parser.add_argument('--runornot', type=bool, default=True)
+    parser.add_argument('--runornot', type=int, default=1)
+    parser.add_argument('--fixslab', type=int, default=1)
 
     args = parser.parse_args()
-    execute_reaction([args.path, args.site, args.angle, args.height, args.reaction.lower(), args.runornot])
+    execute_reaction(
+        [args.path, args.site, args.angle, args.height, args.reaction.lower(), args.runornot, args.fixslab])

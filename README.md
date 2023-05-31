@@ -80,11 +80,11 @@ like if you want to put the 5th atom to be the active center,it will be like `--
 **--angle(int,defult:0)**  
 The angle you can rotate the adsorbates  
 
-**--runornot(bool)**  
-Whether to run Vasp or not
+**--runornot(int)**  
+Whether to run Vasp or not, 1 is to start run the VASP
 
-**--fixslab(bool)**  
-Whether to fix slab when run vasp  
+**--fixslab(int)**  
+Whether to fix slab when run vasp, 1 is to fix the slab
 
 After run main.py you can copy the [step_figure.py](step_figure.py) to path,
 and run the command `python step_figure.py`,then follow the guidance.  
